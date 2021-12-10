@@ -29,7 +29,7 @@ namespace DotNetCoreMVC.Models
     {
         public IEnumerable<Laptop> LaptopList { get; set; }
         [BindProperty(SupportsGet = true)]
-        public string search { get; set; }
+        public string searchString { get; set; }
         public LaptopsViewModel GetByName(string name)
         {
             LaptopList = LaptopList.Where(x => x.Name.ToLower().Contains(name));

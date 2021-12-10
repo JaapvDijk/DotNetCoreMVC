@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DotNetCoreMVC.Controllers
 {
@@ -18,22 +17,43 @@ namespace DotNetCoreMVC.Controllers
             new Laptop() { Name = "DELL XPS" },
             new Laptop() { Name = "HP Omen" }
         };
-
-        public HomeController(ILogger<HomeController> logger)
+        NumberCounterTransient _numberCounterTransient;
+        NumberCounterScoped _numberCounterScoped;
+        NumberCounterSingleton _numberCounterSingleton;
+        public HomeController(ILogger<HomeController> logger, 
+                              NumberCounterTransient numberCounterTransient,
+                              NumberCounterScoped numberCounterScoped,
+                              NumberCounterSingleton numberCounterSingleton)
         {
+            _numberCounterTransient = numberCounterTransient;
+            _numberCounterScoped = numberCounterScoped;
+            _numberCounterSingleton = numberCounterSingleton;
             _logger = logger;
         }
 
-        public IActionResult Index(string? search)
+        public IActionResult Counter(bool doScoped)
+        {
+            if (true) new NumberCounterDependent()._numberCounterScoped.total += 1;
+
+            CountersViewModel counterTotal = new() 
+            {
+                Transient = _numberCounterTransient.total += 1,
+                Scoped = _numberCounterScoped.total += 1,
+                Singleton = _numberCounterSingleton.total += 1
+            };
+
+            return View(counterTotal);
+        }
+
+        public IActionResult Index(string? searchString)
         {
             LaptopsViewModel result = new();
             result.LaptopList = _laptops;
 
-            //TODO: search remains null in result.search
-            //TODO: replace search with result.search
-            if (search != null)
+            //TODO: search bind remains null in LaptopsViewModel.search
+            if (searchString != null)
             {
-                return View(result.GetByName(search));
+                return View(result.GetByName(searchString));
             }
 
             return View(result);

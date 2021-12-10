@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotNetCoreMVC.Models;
 
 namespace DotNetCoreMVC
 {
@@ -24,6 +25,10 @@ namespace DotNetCoreMVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddSingleton<NumberCounterSingleton>();
+            services.AddScoped<NumberCounterScoped>();
+            services.AddTransient<NumberCounterTransient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

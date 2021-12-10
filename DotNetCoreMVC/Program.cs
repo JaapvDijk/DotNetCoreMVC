@@ -16,6 +16,7 @@ namespace DotNetCoreMVC
             CreateHostBuilder(args).Build().Run();
         }
 
+        //Seeding..
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>

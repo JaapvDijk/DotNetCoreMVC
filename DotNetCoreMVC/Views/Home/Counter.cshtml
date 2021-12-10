@@ -1,0 +1,15 @@
+﻿@model CountersViewModel
+@{
+    ViewData["Title"] = "Counter deluxe plus pro";
+}
+
+<h1>Counter deluxe diamond VIP edition</h1>
+
+Transient: @Model.Transient; (Controller lifetime) <br/>
+Scoped: @Model.Scoped; (Request lifetime) <br/>
+Singleton: @Model.Singleton (Server lifetime);
+
+<br />
+<a asp-controller="Home" asp-action="Counter">Request Counter page</a>
+<br />
+<a asp-controller="Home" asp-action="Counter2">Request Counter page (with multiple numbercounter dependencies)</a>
