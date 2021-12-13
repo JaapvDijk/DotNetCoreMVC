@@ -1,6 +1,7 @@
 ﻿using DotNetCoreMVC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,36 +11,50 @@ namespace DotNetCoreMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        //In memory data
         private readonly List<Laptop> _laptops = new()
         {
             new Laptop() { Name = "Lenovo Ideapad" },
             new Laptop() { Name = "DELL XPS" },
             new Laptop() { Name = "HP Omen" }
         };
-        NumberCounterTransient _numberCounterTransient;
-        NumberCounterScoped _numberCounterScoped;
-        NumberCounterSingleton _numberCounterSingleton;
-        public HomeController(ILogger<HomeController> logger, 
-                              NumberCounterTransient numberCounterTransient,
+
+        private NumberCounterTransient _numberCounterTransient;
+        private NumberCounterScoped _numberCounterScoped;
+        private NumberCounterSingleton _numberCounterSingleton;
+
+        private NumberCounterDependent _numberCounterDependent;
+        private NumberCounterConfig _numberCounterConfig;
+        public HomeController(NumberCounterTransient numberCounterTransient,
                               NumberCounterScoped numberCounterScoped,
-                              NumberCounterSingleton numberCounterSingleton)
+                              NumberCounterSingleton numberCounterSingleton,
+                              NumberCounterDependent numberCounterDependent,
+                              IOptionsSnapshot<NumberCounterConfig> numberCounterConfig)
         {
             _numberCounterTransient = numberCounterTransient;
             _numberCounterScoped = numberCounterScoped;
             _numberCounterSingleton = numberCounterSingleton;
-            _logger = logger;
+
+            _numberCounterDependent = numberCounterDependent;
+            _numberCounterConfig = numberCounterConfig.Value;
         }
 
-        public IActionResult Counter(bool doScoped)
+        public IActionResult Counter(bool UseTwoDependencies = false)
         {
-            if (true) new NumberCounterDependent()._numberCounterScoped.total += 1;
+            int IncrementAmount = _numberCounterConfig.IncrementAmount;
+
+            if (UseTwoDependencies)
+            {
+                _numberCounterDependent.NumberCounterScoped.total += IncrementAmount;
+                _numberCounterDependent.NumberCounterSingleton.total += IncrementAmount;
+                _numberCounterDependent.NumberCounterTransient.total += IncrementAmount;
+            }
 
             CountersViewModel counterTotal = new() 
             {
-                Transient = _numberCounterTransient.total += 1,
-                Scoped = _numberCounterScoped.total += 1,
-                Singleton = _numberCounterSingleton.total += 1
+                Transient = _numberCounterTransient.total += IncrementAmount,
+                Scoped = _numberCounterScoped.total += IncrementAmount,
+                Singleton = _numberCounterSingleton.total += IncrementAmount
             };
 
             return View(counterTotal);

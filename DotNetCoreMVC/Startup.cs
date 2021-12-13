@@ -29,6 +29,16 @@ namespace DotNetCoreMVC
             services.AddSingleton<NumberCounterSingleton>();
             services.AddScoped<NumberCounterScoped>();
             services.AddTransient<NumberCounterTransient>();
+
+            services.AddTransient<NumberCounterDependent>(x =>
+            {
+                var transient = x.GetRequiredService<NumberCounterTransient>();
+                var scoped = x.GetRequiredService<NumberCounterScoped>();
+                var singleton = x.GetRequiredService<NumberCounterSingleton>();
+                return new NumberCounterDependent(transient, scoped, singleton);
+            });
+
+            services.Configure<NumberCounterConfig>(Configuration.GetSection("Counting"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

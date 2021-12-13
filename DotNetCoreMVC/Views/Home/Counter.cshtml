@@ -5,11 +5,21 @@
 
 <h1>Counter deluxe diamond VIP edition</h1>
 
-Transient: @Model.Transient; (Controller lifetime) <br/>
-Scoped: @Model.Scoped; (Request lifetime) <br/>
+<b>Number of times a NumberCounter instance has been reused:</b>
+<br/>
+Transient: @Model.Transient; (Per request, per dependency lifetime)
+<br/>
+Scoped: @Model.Scoped; (Request lifetime)
+<br/>
 Singleton: @Model.Singleton (Server lifetime);
 
+<hr />
+
+<form method="get" asp-controller="Home" asp-action="Counter">
+    <input type="submit" value="Request increment">
+</form>
 <br />
-<a asp-controller="Home" asp-action="Counter">Request Counter page</a>
-<br />
-<a asp-controller="Home" asp-action="Counter2">Request Counter page (with multiple numbercounter dependencies)</a>
+<form method="get" asp-controller="Home" asp-action="Counter">
+    <input type="hidden" value="true" name="UseTwoDependencies">
+    <input type="submit" value="Request increment (Require two instances of each NumberCounter dependency)">
+</form>

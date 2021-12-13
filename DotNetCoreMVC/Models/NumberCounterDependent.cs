@@ -8,16 +8,18 @@ namespace DotNetCoreMVC.Models
 {
     public class NumberCounterDependent
     {
-        NumberCounterTransient _numberCounterTransient;
-        NumberCounterScoped _numberCounterScoped;
-        NumberCounterSingleton _numberCounterSingleton;
+        public NumberCounterTransient NumberCounterTransient { get; set; }
+        public NumberCounterScoped NumberCounterScoped { get; set; }
+        public NumberCounterSingleton NumberCounterSingleton { get; set; }
         public NumberCounterDependent(NumberCounterTransient numberCounterTransient,
                       NumberCounterScoped numberCounterScoped,
-                      NumberCounterSingleton numberCounterSingleton)
+                      NumberCounterSingleton numberCounterSingleton
+                      )
         {
-            _numberCounterTransient = numberCounterTransient;
-            _numberCounterScoped = numberCounterScoped;
-            _numberCounterSingleton = numberCounterSingleton;
+            NumberCounterTransient = numberCounterTransient;
+            NumberCounterScoped = numberCounterScoped;
+            NumberCounterSingleton = numberCounterSingleton;
+
         }
     }
 }
