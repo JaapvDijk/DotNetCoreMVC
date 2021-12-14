@@ -7,6 +7,7 @@ namespace DotNetCoreMVC.Models
 {
     public class NumberCounterConfig
     {
+        public string Test { get; set; }
         public int IncrementAmount { get; set; }
     }
 }

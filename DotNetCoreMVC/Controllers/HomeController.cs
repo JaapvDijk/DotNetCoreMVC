@@ -19,12 +19,12 @@ namespace DotNetCoreMVC.Controllers
             new Laptop() { Name = "HP Omen" }
         };
 
-        private NumberCounterTransient _numberCounterTransient;
-        private NumberCounterScoped _numberCounterScoped;
-        private NumberCounterSingleton _numberCounterSingleton;
+        private readonly NumberCounterTransient _numberCounterTransient;
+        private readonly NumberCounterScoped _numberCounterScoped;
+        private readonly NumberCounterSingleton _numberCounterSingleton;
 
-        private NumberCounterDependent _numberCounterDependent;
-        private NumberCounterConfig _numberCounterConfig;
+        private readonly NumberCounterDependent _numberCounterDependent;
+        private readonly NumberCounterConfig _numberCounterConfig;
         public HomeController(NumberCounterTransient numberCounterTransient,
                               NumberCounterScoped numberCounterScoped,
                               NumberCounterSingleton numberCounterSingleton,
@@ -39,18 +39,18 @@ namespace DotNetCoreMVC.Controllers
             _numberCounterConfig = numberCounterConfig.Value;
         }
 
-        public IActionResult Counter(bool UseTwoDependencies = false)
+        public IActionResult Counter(bool useTwoDependencies = false)
         {
             int IncrementAmount = _numberCounterConfig.IncrementAmount;
 
-            if (UseTwoDependencies)
+            if (useTwoDependencies)
             {
                 _numberCounterDependent.NumberCounterScoped.total += IncrementAmount;
                 _numberCounterDependent.NumberCounterSingleton.total += IncrementAmount;
                 _numberCounterDependent.NumberCounterTransient.total += IncrementAmount;
             }
 
-            CountersViewModel counterTotal = new() 
+            CountersViewModel counterTotal = new()
             {
                 Transient = _numberCounterTransient.total += IncrementAmount,
                 Scoped = _numberCounterScoped.total += IncrementAmount,
