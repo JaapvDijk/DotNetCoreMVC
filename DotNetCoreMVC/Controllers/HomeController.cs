@@ -1,11 +1,12 @@
 ﻿using DotNetCoreMVC.Models;
+using DotNetCoreMVC.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using IdentityModel.Client;
 
 namespace DotNetCoreMVC.Controllers
 {
@@ -25,11 +26,15 @@ namespace DotNetCoreMVC.Controllers
 
         private readonly NumberCounterDependent _numberCounterDependent;
         private readonly NumberCounterConfig _numberCounterConfig;
+
+        private readonly ITokenService _tokenService;
+
         public HomeController(NumberCounterTransient numberCounterTransient,
                               NumberCounterScoped numberCounterScoped,
                               NumberCounterSingleton numberCounterSingleton,
                               NumberCounterDependent numberCounterDependent,
-                              IOptionsSnapshot<NumberCounterConfig> numberCounterConfig)
+                              IOptionsSnapshot<NumberCounterConfig> numberCounterConfig,
+                              ITokenService tokenService)
         {
             _numberCounterTransient = numberCounterTransient;
             _numberCounterScoped = numberCounterScoped;
@@ -37,6 +42,8 @@ namespace DotNetCoreMVC.Controllers
 
             _numberCounterDependent = numberCounterDependent;
             _numberCounterConfig = numberCounterConfig.Value;
+
+            _tokenService = tokenService;
         }
 
         public IActionResult Counter(bool useTwoDependencies = false)
@@ -60,18 +67,32 @@ namespace DotNetCoreMVC.Controllers
             return View(counterTotal);
         }
 
-        public IActionResult Index(string? searchString)
+        public async Task<IActionResult> Index(string? searchString)
         {
-            LaptopsViewModel result = new();
-            result.LaptopList = _laptops;
+            TestViewModel viewmodel = new();
+            viewmodel.LaptopList = _laptops;
 
-            //TODO: search bind remains null in LaptopsViewModel.search
-            if (searchString != null)
+            using (var client = new HttpClient())
             {
-                return View(result.GetByName(searchString));
+                var tokenResponse = await _tokenService.GetToken("weatherapi.read");
+
+                client.SetBearerToken(tokenResponse.AccessToken);
+
+                var call_result = client.GetAsync("https://localhost:5002/WeatherForecast").Result;
+                if (call_result.IsSuccessStatusCode)
+                {
+                    var message = call_result.Content.ReadAsStringAsync().Result;
+                    viewmodel.AuthorizedMessageFromApi = message;
+                }
             }
 
-            return View(result);
+            //TODO: search bind remains null in TestViewModel.search with [BindProperty] and asp-for
+            if (searchString != null)
+            {
+                return View(viewmodel.GetByName(searchString));
+            }
+
+            return View(viewmodel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

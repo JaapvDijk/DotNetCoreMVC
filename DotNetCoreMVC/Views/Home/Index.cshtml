@@ -1,21 +1,25 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@model LaptopsViewModel
+@model TestViewModel
 
 @{}
 
 <form method="get">
     <input type="search" name="searchString" placeholder="search" asp-for="searchString">
 </form>
-<br />
+
+<hr />
 
 <table>
-@foreach (var laptop in Model.LaptopList)
-{
-    <tr>
-        <td>@laptop.Name</td>
-        <hr/>
-    </tr>
-}
-</table<>
+    @foreach (var laptop in Model.LaptopList)
+    {
+        <tr>
+            <td>@laptop.Name</td>
+        </tr>
+    }
+</table>
+
+<hr />
+
+Authorized message from api: @Model.AuthorizedMessageFromApi

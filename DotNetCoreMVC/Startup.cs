@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DotNetCoreMVC.Models;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using DotNetCoreMVC.Services;
 
 namespace DotNetCoreMVC
 {
@@ -33,6 +32,38 @@ namespace DotNetCoreMVC
             services.AddTransient<NumberCounterDependent>();
 
             services.AddControllersWithViews();
+
+            //Authentication
+            //TODO: Authority from appsettings and secrets store
+            services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie("cookie")
+            .AddOpenIdConnect("oidc", options =>
+            {
+                options.Authority = "https://localhost:5004";
+                options.ClientId = "an.api";
+                options.ClientSecret = "SuperSecretPassword"; //hehe
+                //options.CallbackPath = "/signin";
+
+                options.Scope.Add("weatherapi.read");
+
+                options.SaveTokens = true;
+                options.GetClaimsFromUserInfoEndpoint = true;
+
+                //options.ClaimActions.MapUniqueJsonKey("CareerStarted","CareerStarted");
+                //options.ClaimActions.MapUniqueJsonKey("Role", "Role");
+                //options.ClaimActions.MapUniqueJsonKey("Permission", "permission");
+
+                options.ResponseType = "code";
+                options.ResponseMode = "query";
+                options.UsePkce = true;
+            });
+
+            services.Configure<IdentityServerSettings>(Configuration.GetSection("IdentityServerSettings"));
+            services.AddSingleton<ITokenService, TokenService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +84,7 @@ namespace DotNetCoreMVC
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

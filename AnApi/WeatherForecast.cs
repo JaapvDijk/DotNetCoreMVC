@@ -1,6 +1,6 @@
 using System;
 
-namespace IdentityServer
+namespace AnApi
 {
     public class WeatherForecast
     {
