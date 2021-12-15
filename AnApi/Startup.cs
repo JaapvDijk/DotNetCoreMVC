@@ -24,7 +24,7 @@ namespace AnApi
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AnApi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "An Api", Version = "v1" });
             });
 
             //Authentication
