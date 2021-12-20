@@ -8,6 +8,7 @@ using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using DotNetCoreMVC.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace DotNetCoreMVC
 {
@@ -35,20 +36,27 @@ namespace DotNetCoreMVC
 
             //Authentication
             //TODO: Authority from appsettings and secrets store
-            services.AddAuthentication(o =>
+            services.AddAuthentication(options =>
             {
-                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = "oidc";
             })
-            .AddCookie("cookie")
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+                //options =>
+                //{
+                //    options.LoginPath = new PathString("/auth/login");
+                //    options.AccessDeniedPath = new PathString("/auth/denied");
+                //})
             .AddOpenIdConnect("oidc", options =>
             {
                 options.Authority = "https://localhost:5004";
-                options.ClientId = "an.api";
-                options.ClientSecret = "SuperSecretPassword"; //hehe
-                //options.CallbackPath = "/signin";
+                options.ClientId = "mvc.client";
+                options.ClientSecret = "SuperSecretPassword";
+                options.CallbackPath = "/signin";
 
                 options.Scope.Add("weatherapi.read");
+                //options.Scope.Add("openid");
+                //options.Scope.Add("profile");
 
                 options.SaveTokens = true;
                 options.GetClaimsFromUserInfoEndpoint = true;

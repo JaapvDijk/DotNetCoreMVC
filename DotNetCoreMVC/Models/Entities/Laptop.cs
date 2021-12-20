@@ -31,6 +31,7 @@ namespace DotNetCoreMVC.Models
         [BindProperty(SupportsGet = true)]
         public string searchString { get; set; }
         public string? AuthorizedMessageFromApi { get; set; }
+        public string? MyToken { get; set; }
         public TestViewModel GetByName(string name)
         {
             LaptopList = LaptopList.Where(x => x.Name.ToLower().Contains(name.ToLower()));

@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.31727.386
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetCoreMVC", "DotNetCoreMVC\DotNetCoreMVC.csproj", "{ADA3C640-C040-4EC9-AB6A-8FA94C381FBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{EA08F288-1892-4DDC-9601-2E8F45CFC667}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{EA08F288-1892-4DDC-9601-2E8F45CFC667}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnApi", "AnApi\AnApi.csproj", "{471B89B7-F073-4BE8-A089-4D9D797C75FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnApi", "AnApi\AnApi.csproj", "{471B89B7-F073-4BE8-A089-4D9D797C75FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

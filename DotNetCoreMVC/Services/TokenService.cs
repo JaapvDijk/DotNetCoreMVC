@@ -32,6 +32,16 @@ namespace DotNetCoreMVC.Services
         public async Task<TokenResponse> GetToken(string scope)
         {
             using var client = new HttpClient();
+            //var tokenResponse = await client.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest 
+            //{
+            //    Address = _discoveryDocument.TokenEndpoint,
+
+            //    ClientId = _identityServerSettings.Value.ClientName,
+            //    ClientSecret = _identityServerSettings.Value.ClientPassword,
+            //    Code = "code",
+            //    RedirectUri = "/"
+            //});
+
             var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
                 Address = _discoveryDocument.TokenEndpoint,
@@ -40,7 +50,6 @@ namespace DotNetCoreMVC.Services
                 ClientSecret = _identityServerSettings.Value.ClientPassword,
                 Scope = scope
             });
-
 
             if (tokenResponse.IsError)
             {

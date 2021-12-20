@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityModel.Client;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DotNetCoreMVC.Controllers
 {
@@ -67,6 +68,7 @@ namespace DotNetCoreMVC.Controllers
             return View(counterTotal);
         }
 
+        [Authorize]
         public async Task<IActionResult> Index(string? searchString)
         {
             TestViewModel viewmodel = new();
@@ -74,14 +76,18 @@ namespace DotNetCoreMVC.Controllers
 
             using (var client = new HttpClient())
             {
+                //client.RequestClientCredentialsTokenAsync()
+                //{ }
+                //TODO: IDisposable?
                 var tokenResponse = await _tokenService.GetToken("weatherapi.read");
-
+                viewmodel.MyToken = tokenResponse.AccessToken;
                 client.SetBearerToken(tokenResponse.AccessToken);
 
-                var call_result = client.GetAsync("https://localhost:5002/WeatherForecast").Result;
+                var call_result = await client.GetAsync("https://localhost:5002/WeatherForecast");
+                var a = 1;
                 if (call_result.IsSuccessStatusCode)
                 {
-                    var message = call_result.Content.ReadAsStringAsync().Result;
+                    var message = await call_result.Content.ReadAsStringAsync();
                     viewmodel.AuthorizedMessageFromApi = message;
                 }
             }
