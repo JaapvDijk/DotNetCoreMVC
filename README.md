@@ -5,5 +5,5 @@ Trying out:
 
 - Identity server: 
   - MVC project is configured as a client, can get token from Identity Server
-  - A seperate API with authorization
+  - A seperate API requiring authorization
   - A seperate Identity server for authentication
