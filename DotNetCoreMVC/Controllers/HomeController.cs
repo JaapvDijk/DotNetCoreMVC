@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 
 namespace DotNetCoreMVC.Controllers
 {
@@ -28,14 +29,11 @@ namespace DotNetCoreMVC.Controllers
         private readonly NumberCounterDependent _numberCounterDependent;
         private readonly NumberCounterConfig _numberCounterConfig;
 
-        private readonly ITokenService _tokenService;
-
         public HomeController(NumberCounterTransient numberCounterTransient,
                               NumberCounterScoped numberCounterScoped,
                               NumberCounterSingleton numberCounterSingleton,
                               NumberCounterDependent numberCounterDependent,
-                              IOptionsSnapshot<NumberCounterConfig> numberCounterConfig,
-                              ITokenService tokenService)
+                              IOptionsSnapshot<NumberCounterConfig> numberCounterConfig)
         {
             _numberCounterTransient = numberCounterTransient;
             _numberCounterScoped = numberCounterScoped;
@@ -43,8 +41,6 @@ namespace DotNetCoreMVC.Controllers
 
             _numberCounterDependent = numberCounterDependent;
             _numberCounterConfig = numberCounterConfig.Value;
-
-            _tokenService = tokenService;
         }
 
         public IActionResult Counter(bool useTwoDependencies = false)
@@ -71,24 +67,24 @@ namespace DotNetCoreMVC.Controllers
         [Authorize]
         public async Task<IActionResult> Index(string? searchString)
         {
-            TestViewModel viewmodel = new();
+            //await Context.AuthenticateAsync()).Properties.Items
+            var token = await HttpContext.GetTokenAsync("access_token");
+            TestViewModel viewmodel = new() { MyToken = token };
             viewmodel.LaptopList = _laptops;
 
             using (var client = new HttpClient())
             {
-                //client.RequestClientCredentialsTokenAsync()
-                //{ }
-                //TODO: IDisposable?
-                var tokenResponse = await _tokenService.GetToken("weatherapi.read");
-                viewmodel.MyToken = tokenResponse.AccessToken;
-                client.SetBearerToken(tokenResponse.AccessToken);
+                client.SetBearerToken(token);
+                var call_result = await client.GetAsync("https://localhost:5002/api/WeatherForecast");
 
-                var call_result = await client.GetAsync("https://localhost:5002/WeatherForecast");
-                var a = 1;
                 if (call_result.IsSuccessStatusCode)
                 {
                     var message = await call_result.Content.ReadAsStringAsync();
                     viewmodel.AuthorizedMessageFromApi = message;
+                }
+                else 
+                {
+                    viewmodel.AuthorizedMessageFromApi = "mag niet";
                 }
             }
 

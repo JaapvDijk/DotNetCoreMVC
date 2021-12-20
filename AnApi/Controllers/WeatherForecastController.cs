@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace AnApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     public class WeatherForecastController : ControllerBase
     {
@@ -38,5 +38,6 @@ namespace AnApi.Controllers
             //.ToArray();
             return "You need to be authorized to read this :)";
         }
+
     }
 }

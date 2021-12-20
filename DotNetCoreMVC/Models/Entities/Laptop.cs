@@ -25,13 +25,15 @@ namespace DotNetCoreMVC.Models
         public int? Storage { get; set; }
     }
 
-    public class TestViewModel : PageModel
+    public class TestViewModel
     {
         public IEnumerable<Laptop> LaptopList { get; set; }
         [BindProperty(SupportsGet = true)]
         public string searchString { get; set; }
+        #nullable enable
         public string? AuthorizedMessageFromApi { get; set; }
         public string? MyToken { get; set; }
+        #nullable disable
         public TestViewModel GetByName(string name)
         {
             LaptopList = LaptopList.Where(x => x.Name.ToLower().Contains(name.ToLower()));

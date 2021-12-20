@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using DotNetCoreMVC.Services;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace DotNetCoreMVC
 {
@@ -49,13 +51,30 @@ namespace DotNetCoreMVC
                 //})
             .AddOpenIdConnect("oidc", options =>
             {
+                options.Events = new OpenIdConnectEvents()
+                {
+                    OnAuthorizationCodeReceived = context => { 
+                        return Task.CompletedTask;
+                    },
+                    OnMessageReceived = context => {
+                        return Task.CompletedTask;
+                    },
+                    OnTokenResponseReceived = context => {
+                        return Task.CompletedTask;
+                    },
+                    OnUserInformationReceived = context => {
+                        return Task.CompletedTask;
+                    }
+                };
+
                 options.Authority = "https://localhost:5004";
                 options.ClientId = "mvc.client";
                 options.ClientSecret = "SuperSecretPassword";
                 options.CallbackPath = "/signin";
 
+                options.Scope.Clear();
                 options.Scope.Add("weatherapi.read");
-                //options.Scope.Add("openid");
+                options.Scope.Add("openid");
                 //options.Scope.Add("profile");
 
                 options.SaveTokens = true;
@@ -70,8 +89,8 @@ namespace DotNetCoreMVC
                 options.UsePkce = true;
             });
 
-            services.Configure<IdentityServerSettings>(Configuration.GetSection("IdentityServerSettings"));
-            services.AddSingleton<ITokenService, TokenService>();
+            //services.Configure<IdentityServerSettings>(Configuration.GetSection("IdentityServerSettings"));
+            //services.AddSingleton<ITokenService, TokenService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
