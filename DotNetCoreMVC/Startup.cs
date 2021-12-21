@@ -72,10 +72,9 @@ namespace DotNetCoreMVC
                 options.ClientSecret = "SuperSecretPassword";
                 options.CallbackPath = "/signin";
 
-                options.Scope.Clear();
                 options.Scope.Add("weatherapi.read");
                 options.Scope.Add("openid");
-                //options.Scope.Add("profile");
+                options.Scope.Add("profile");
 
                 options.SaveTokens = true;
                 options.GetClaimsFromUserInfoEndpoint = true;
