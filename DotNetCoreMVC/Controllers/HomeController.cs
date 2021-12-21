@@ -9,6 +9,7 @@ using IdentityModel.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using DataAccess;
+using System.Linq;
 
 namespace DotNetCoreMVC.Controllers
 {
@@ -98,7 +99,8 @@ namespace DotNetCoreMVC.Controllers
         public async Task<IActionResult> Index(string? searchString)
         {
             var token = await HttpContext.GetTokenAsync("access_token");
-            TestViewModel viewmodel = new() { MyToken = token };
+            TestViewModel viewmodel = new();
+            viewmodel.ProductTotal = _context.Stats.Select(x => x.NumberOfProducts).FirstOrDefault();
             viewmodel.LaptopList = _laptops;
 
             using (var client = new HttpClient())

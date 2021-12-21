@@ -32,7 +32,7 @@ namespace DotNetCoreMVC.Models
         public string searchString { get; set; }
         #nullable enable
         public string? AuthorizedMessageFromApi { get; set; }
-        public string? MyToken { get; set; }
+        public int? ProductTotal { get; set; }
         #nullable disable
         public TestViewModel GetByName(string name)
         {
