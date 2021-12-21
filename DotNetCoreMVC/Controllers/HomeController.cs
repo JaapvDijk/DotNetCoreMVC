@@ -9,7 +9,6 @@ using IdentityModel.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using DataAccess;
-using System.Linq;
 
 namespace DotNetCoreMVC.Controllers
 {
