@@ -9,8 +9,7 @@ namespace DataAccess
         public string Name { get; set; }
         public decimal Price { get; set; }
 
-        public Review Reviews { get; set; }
-
+        public List<Review> Reviews { get; set; }
         public List<Order> Orders { get; set; }
     }
 }

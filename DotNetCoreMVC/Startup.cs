@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using DataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNetCoreMVC
 {
@@ -25,6 +27,8 @@ namespace DotNetCoreMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DatabaseContext>();
+
             services.Configure<NumberCounterConfig>(Configuration.GetSection("Counting"));
 
             services.AddSingleton<NumberCounterSingleton>();

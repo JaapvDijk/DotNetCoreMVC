@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using DataAccess;
+using System.Linq;
 
 namespace DotNetCoreMVC.Controllers
 {
@@ -21,6 +23,26 @@ namespace DotNetCoreMVC.Controllers
             new Laptop() { Name = "HP Omen" }
         };
 
+        private readonly Order _order = new()
+        {
+            Products = new()
+            {
+                new()
+                {
+                    Name = "ProductNaam",
+                    Price = default,
+                    Reviews = new()
+                    {
+                        new() { Rating = 5, Description = "Very nice" },
+                        new() { Rating = 4, Description = "Quite nice" },
+                        new() { Rating = 3, Description = "Ok I guess" },
+                        new() { Rating = 2, Description = "Not so nice" },
+                        new() { Rating = 1, Description = "This sucks" },
+                    }
+                }
+            }
+        };
+
         private readonly NumberCounterTransient _numberCounterTransient;
         private readonly NumberCounterScoped _numberCounterScoped;
         private readonly NumberCounterSingleton _numberCounterSingleton;
@@ -28,11 +50,14 @@ namespace DotNetCoreMVC.Controllers
         private readonly NumberCounterDependent _numberCounterDependent;
         private readonly NumberCounterConfig _numberCounterConfig;
 
+        private readonly DatabaseContext _context;
+
         public HomeController(NumberCounterTransient numberCounterTransient,
                               NumberCounterScoped numberCounterScoped,
                               NumberCounterSingleton numberCounterSingleton,
                               NumberCounterDependent numberCounterDependent,
-                              IOptionsSnapshot<NumberCounterConfig> numberCounterConfig)
+                              IOptionsSnapshot<NumberCounterConfig> numberCounterConfig,
+                              DatabaseContext databaseContext)
         {
             _numberCounterTransient = numberCounterTransient;
             _numberCounterScoped = numberCounterScoped;
@@ -40,6 +65,13 @@ namespace DotNetCoreMVC.Controllers
 
             _numberCounterDependent = numberCounterDependent;
             _numberCounterConfig = numberCounterConfig.Value;
+
+            _context = databaseContext;
+        }
+        public void AddOrder()
+        {
+            _context.Orders.Add(_order);
+            _context.SaveChanges();
         }
 
         public IActionResult Counter(bool useTwoDependencies = false)
@@ -66,7 +98,6 @@ namespace DotNetCoreMVC.Controllers
         [Authorize]
         public async Task<IActionResult> Index(string? searchString)
         {
-            //await Context.AuthenticateAsync()).Properties.Items
             var token = await HttpContext.GetTokenAsync("access_token");
             TestViewModel viewmodel = new() { MyToken = token };
             viewmodel.LaptopList = _laptops;
