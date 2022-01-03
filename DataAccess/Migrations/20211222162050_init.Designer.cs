@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211221141918_Reviews")]
-    partial class Reviews
+    [Migration("20211222162050_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -75,6 +75,14 @@ namespace DataAccess.Migrations
                     b.ToTable("Reviews");
                 });
 
+            modelBuilder.Entity("DataAccess.Stats", b =>
+                {
+                    b.Property<int?>("NumberOfProducts")
+                        .HasColumnType("int");
+
+                    b.ToView("Stats");
+                });
+
             modelBuilder.Entity("OrderProduct", b =>
                 {
                     b.Property<int>("OrdersId")
@@ -88,6 +96,16 @@ namespace DataAccess.Migrations
                     b.HasIndex("ProductsId");
 
                     b.ToTable("OrderProduct");
+                });
+
+            modelBuilder.Entity("DataAccess.Keyboard", b =>
+                {
+                    b.HasBaseType("DataAccess.Product");
+
+                    b.Property<int>("NumberOfButtons")
+                        .HasColumnType("int");
+
+                    b.ToTable("Keyboards");
                 });
 
             modelBuilder.Entity("DataAccess.Review", b =>
@@ -109,6 +127,15 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DataAccess.Keyboard", b =>
+                {
+                    b.HasOne("DataAccess.Product", null)
+                        .WithOne()
+                        .HasForeignKey("DataAccess.Keyboard", "Id")
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });
 

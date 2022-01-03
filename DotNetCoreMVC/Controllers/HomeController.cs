@@ -23,26 +23,6 @@ namespace DotNetCoreMVC.Controllers
             new Laptop() { Name = "HP Omen" }
         };
 
-        private readonly Order _order = new()
-        {
-            Products = new()
-            {
-                new()
-                {
-                    Name = "ProductNaam",
-                    Price = default,
-                    Reviews = new()
-                    {
-                        new() { Rating = 5, Description = "Very nice" },
-                        new() { Rating = 4, Description = "Quite nice" },
-                        new() { Rating = 3, Description = "Ok I guess" },
-                        new() { Rating = 2, Description = "Not so nice" },
-                        new() { Rating = 1, Description = "This sucks" },
-                    }
-                }
-            }
-        };
-
         private readonly NumberCounterTransient _numberCounterTransient;
         private readonly NumberCounterScoped _numberCounterScoped;
         private readonly NumberCounterSingleton _numberCounterSingleton;
@@ -67,11 +47,6 @@ namespace DotNetCoreMVC.Controllers
             _numberCounterConfig = numberCounterConfig.Value;
 
             _context = databaseContext;
-        }
-        public void AddOrder()
-        {
-            _context.Orders.Add(_order);
-            _context.SaveChanges();
         }
 
         public IActionResult Counter(bool useTwoDependencies = false)

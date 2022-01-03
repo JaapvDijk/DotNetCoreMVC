@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
-
+//test
 namespace DotNetCoreMVC
 {
     public class Startup

@@ -1,0 +1,4 @@
+﻿SET STATISTICS IO ON
+SELECT *
+FROM Products
+WHERE Price < 10

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211221212647_Stats")]
+    [Migration("20211223133241_Stats")]
     partial class Stats
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,6 +98,16 @@ namespace DataAccess.Migrations
                     b.ToTable("OrderProduct");
                 });
 
+            modelBuilder.Entity("DataAccess.Keyboard", b =>
+                {
+                    b.HasBaseType("DataAccess.Product");
+
+                    b.Property<int>("NumberOfButtons")
+                        .HasColumnType("int");
+
+                    b.ToTable("Keyboards");
+                });
+
             modelBuilder.Entity("DataAccess.Review", b =>
                 {
                     b.HasOne("DataAccess.Product", null)
@@ -117,6 +127,15 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DataAccess.Keyboard", b =>
+                {
+                    b.HasOne("DataAccess.Product", null)
+                        .WithOne()
+                        .HasForeignKey("DataAccess.Keyboard", "Id")
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });
 

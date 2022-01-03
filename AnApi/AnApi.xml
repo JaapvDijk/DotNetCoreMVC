@@ -4,9 +4,9 @@
         <name>AnApi</name>
     </assembly>
     <members>
-        <member name="M:AnApi.Controllers.NoAuthController.Get">
+        <member name="T:AnApi.Controllers.NoAuthController">
             <summary>
-            Controller summary
+            NoAuth controller summary
             </summary>
             <returns></returns>
         </member>

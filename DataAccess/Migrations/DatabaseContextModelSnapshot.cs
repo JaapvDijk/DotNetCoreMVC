@@ -96,6 +96,16 @@ namespace DataAccess.Migrations
                     b.ToTable("OrderProduct");
                 });
 
+            modelBuilder.Entity("DataAccess.Keyboard", b =>
+                {
+                    b.HasBaseType("DataAccess.Product");
+
+                    b.Property<int>("NumberOfButtons")
+                        .HasColumnType("int");
+
+                    b.ToTable("Keyboards");
+                });
+
             modelBuilder.Entity("DataAccess.Review", b =>
                 {
                     b.HasOne("DataAccess.Product", null)
@@ -115,6 +125,15 @@ namespace DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DataAccess.Keyboard", b =>
+                {
+                    b.HasOne("DataAccess.Product", null)
+                        .WithOne()
+                        .HasForeignKey("DataAccess.Keyboard", "Id")
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });
 
