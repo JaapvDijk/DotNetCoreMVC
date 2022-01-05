@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+//test
 namespace DataAccess
 {
     public class DatabaseContext : DbContext
