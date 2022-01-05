@@ -85,5 +85,11 @@ namespace AnApi.Controllers
             _context.Keyboards.Add(new Keyboard() { NumberOfButtons = 104 });
             _context.SaveChanges();
         }
+
+        [HttpGet("GetAllKeyboard")]
+        public List<Keyboard> GetAllKeyboard()
+        {
+            return _context.Keyboards.ToList();
+        }
     }
 }
