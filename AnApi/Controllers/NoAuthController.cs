@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -82,8 +83,19 @@ namespace AnApi.Controllers
         [HttpGet("AddKeyboard")]
         public void AddKeyboard()
         {
-            _context.Keyboards.Add(new Keyboard() { NumberOfButtons = 104 });
-            _context.SaveChanges();
+            try
+            {
+                _context.Keyboards.Add(new Keyboard() { NumberOfButtons = 104 });
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                //var path = AppDomain.CurrentDomain.BaseDirectory + "/here.txt";
+                using StreamWriter file = new("here.txt");
+                file.WriteLineAsync(e.Message);
+
+            }
+
         }
 
         [HttpGet("GetAllKeyboard")]
