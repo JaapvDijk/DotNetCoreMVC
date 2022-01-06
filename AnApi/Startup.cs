@@ -43,7 +43,10 @@ namespace AnApi
                 .AddIdentityServerAuthentication(options =>
                 {
                     options.ApiName = "an.api";
-                    options.Authority = "https://localhost:5004";
+                    options.Authority = "http://localhost:5004";
+
+                    //TODO: dev only
+                    options.RequireHttpsMetadata = false;
                 });
         }
 

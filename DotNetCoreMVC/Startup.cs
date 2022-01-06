@@ -70,7 +70,7 @@ namespace DotNetCoreMVC
                     }
                 };
 
-                options.Authority = "https://localhost:5004";
+                options.Authority = "http://localhost:5004";
                 options.ClientId = "mvc.client";
                 options.ClientSecret = "SuperSecretPassword";
                 options.CallbackPath = "/signin";
@@ -89,6 +89,9 @@ namespace DotNetCoreMVC
                 options.ResponseType = "code";
                 options.ResponseMode = "query";
                 options.UsePkce = true;
+
+                //TODO: for dev only
+                options.RequireHttpsMetadata = false;
             });
 
             //services.Configure<IdentityServerSettings>(Configuration.GetSection("IdentityServerSettings"));

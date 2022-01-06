@@ -127,7 +127,7 @@ namespace IdentityServer
                     AllowedScopes = { "openid", "profile", "weatherapi.read" },
                     RequirePkce = true,
                     RequireConsent = false,
-                    AllowPlainTextPkce = false,
+                    AllowPlainTextPkce = false
                 }
             };
     }
