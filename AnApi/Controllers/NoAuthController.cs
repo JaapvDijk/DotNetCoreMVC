@@ -91,7 +91,7 @@ namespace AnApi.Controllers
             }
             catch (Exception e)
             {
-                using StreamWriter file = new("here.txt");
+                using StreamWriter file = new("error.txt");
                 file.WriteLineAsync(e.Message);
             }
         }
