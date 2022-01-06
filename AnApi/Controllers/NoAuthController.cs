@@ -83,6 +83,7 @@ namespace AnApi.Controllers
         [HttpGet("AddKeyboard")]
         public void AddKeyboard()
         {
+            //TODO: zeer schone logging
             try
             {
                 _context.Keyboards.Add(new Keyboard() { NumberOfButtons = 104 });
@@ -90,12 +91,9 @@ namespace AnApi.Controllers
             }
             catch (Exception e)
             {
-                //var path = AppDomain.CurrentDomain.BaseDirectory + "/here.txt";
                 using StreamWriter file = new("here.txt");
                 file.WriteLineAsync(e.Message);
-
             }
-
         }
 
         [HttpGet("GetAllKeyboard")]
