@@ -120,9 +120,9 @@ namespace IdentityServer
                     ClientSecrets =
                         { new Secret("SuperSecretPassword".Sha256()) },
                     AllowedGrantTypes = GrantTypes.Code,
-                    RedirectUris = { "http://localhost:5000/DotNetLearning/signin" }, //http://localhost:5000/signin dev
-                    FrontChannelLogoutUri = "http://localhost:5000/DotNetLearning/signout",
-                    PostLogoutRedirectUris = { "http://localhost:5000/DotNetLearning/signout-callback" },
+                    RedirectUris = { "https://localhost:5000/signin" }, //http://localhost:5000/signin dev
+                    FrontChannelLogoutUri = "https://localhost:5000/signout",
+                    PostLogoutRedirectUris = { "https://localhost:5000/signout-callback" },
                     AllowOfflineAccess = true,
                     AllowedScopes = { "openid", "profile", "weatherapi.read" },
                     RequirePkce = true,
