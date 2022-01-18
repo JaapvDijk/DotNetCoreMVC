@@ -26,6 +26,11 @@ namespace DataAccess
 
             modelBuilder.Entity<Product>().ToTable("Products");
             modelBuilder.Entity<Keyboard>().ToTable("Keyboards");
+
+            //Ignore for lazy loading
+            modelBuilder.Entity<Product>()
+                .Ignore(c => c.Picture)
+                .Ignore(c => c.Picture2);
         }
     }
 }

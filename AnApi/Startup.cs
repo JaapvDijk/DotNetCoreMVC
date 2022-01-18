@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
+using DataAccess.DataAccesPatterns;
 
 namespace AnApi
 {
@@ -26,6 +27,7 @@ namespace AnApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DatabaseContext>();
+            services.AddScoped<ILazyProductRepository, LazyProductRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DataAccess.DataAccesPatterns;
 
 namespace AnApi.Controllers
 {
@@ -38,10 +39,13 @@ namespace AnApi.Controllers
         };
 
         private readonly DatabaseContext _context;
+        private readonly ILazyProductRepository _lazyProductRepository;
 
-        public NoAuthController(DatabaseContext databaseContext) 
+        public NoAuthController(DatabaseContext databaseContext,
+                                ILazyProductRepository lazyProductRepository) 
         {
             _context = databaseContext;
+            _lazyProductRepository = lazyProductRepository;
         }
 
         [HttpGet("Get")]
@@ -100,6 +104,12 @@ namespace AnApi.Controllers
         public List<Keyboard> GetAllKeyboard()
         {
             return _context.Keyboards.ToList();
+        }
+
+        [HttpGet("RepositoryGetProduct")]
+        public IEnumerable<Product> RepositoryGetProduct()
+        {
+            return _lazyProductRepository.All();
         }
     }
 }
