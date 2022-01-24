@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using DataAccess;
 using System.Linq;
+using Hangfire;
+using System;
 
 namespace DotNetCoreMVC.Controllers
 {
@@ -32,12 +34,15 @@ namespace DotNetCoreMVC.Controllers
 
         private readonly DatabaseContext _context;
 
+        private readonly IBackgroundJobClient _backgroundJobClient;
+
         public HomeController(NumberCounterTransient numberCounterTransient,
                               NumberCounterScoped numberCounterScoped,
                               NumberCounterSingleton numberCounterSingleton,
                               NumberCounterDependent numberCounterDependent,
                               IOptionsSnapshot<NumberCounterConfig> numberCounterConfig,
-                              DatabaseContext databaseContext)
+                              DatabaseContext databaseContext,
+                              IBackgroundJobClient backgroundJobClient)
         {
             _numberCounterTransient = numberCounterTransient;
             _numberCounterScoped = numberCounterScoped;
@@ -47,6 +52,13 @@ namespace DotNetCoreMVC.Controllers
             _numberCounterConfig = numberCounterConfig.Value;
 
             _context = databaseContext;
+
+            _backgroundJobClient = backgroundJobClient;
+        }
+        public void GoHangfire(string? message)
+        {
+            message = message ?? "Hello from hangfire!";
+            _backgroundJobClient.Enqueue(() => Console.WriteLine(message));
         }
 
         public IActionResult Counter(bool useTwoDependencies = false)
