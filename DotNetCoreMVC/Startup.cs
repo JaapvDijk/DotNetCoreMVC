@@ -11,7 +11,10 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using DataAccess;
+using System;
 using Microsoft.EntityFrameworkCore;
+using Hangfire;
+using Hangfire.MemoryStorage;
 //test
 namespace DotNetCoreMVC
 {
@@ -27,6 +30,12 @@ namespace DotNetCoreMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHangfire(config => config
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseDefaultTypeSerializer()
+                .UseMemoryStorage());
+            services.AddHangfireServer();
+
             services.AddDbContext<DatabaseContext>();
 
             services.Configure<NumberCounterConfig>(Configuration.GetSection("Counting"));
@@ -96,7 +105,10 @@ namespace DotNetCoreMVC
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, 
+                              IWebHostEnvironment env,
+                              IBackgroundJobClient backgroundJobClient,
+                              IRecurringJobManager recurringJobManager)
         {
             if (env.IsDevelopment())
             {
@@ -122,6 +134,17 @@ namespace DotNetCoreMVC
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseHangfireDashboard();
+            //Run once 
+            backgroundJobClient.Enqueue(() => Console.WriteLine("Hello from hangfire job.."));
+            //Run once after one day
+            backgroundJobClient.Schedule(() => Console.WriteLine("Runned scheduled job.."), TimeSpan.FromDays(1));
+            //Run every minute
+            recurringJobManager.AddOrUpdate("Run every minute #1", 
+                                            () => Console.WriteLine("runned recurring AddOrUpdate job.."), 
+                                            Cron.Minutely);
+                
         }
     }
 }

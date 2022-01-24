@@ -6,6 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hangfire" Version="1.7.28" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.28" />
+    <PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0" />
     <PackageReference Include="IdentityModel" Version="5.2.0" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.13" />
