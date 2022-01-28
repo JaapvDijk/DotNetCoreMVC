@@ -34,8 +34,7 @@ namespace DataAccess.DataAccesPatterns
 
         public ProductProxy ToProductProxy(Product product)
         {
-            //Picture ignored twice (here and DatabaseContext onmodeluild)
-            //Is ignore required?
+            //Use EF proxy instead.. https://docs.microsoft.com/en-us/ef/core/querying/related-data/lazy
             var config = new MapperConfiguration(cfg =>
                 cfg.CreateMap<Product, ProductProxy>()
                     .ForMember(x => x.Picture2, opt => opt.Ignore())
