@@ -17,7 +17,7 @@ namespace DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=tcp:dotnetlearning.database.windows.net,1433;Initial Catalog=testDB;Persist Security Info=False;User ID=jaap;Password=Wachtwoord123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"); //Server=(localdb)\\mssqllocaldb;Database=TestDB;
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TestDB;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
@@ -30,7 +30,9 @@ namespace DataAccess
             //Ignore for lazy loading
             modelBuilder.Entity<Product>()
                 .Ignore(c => c.Picture)
-                .Ignore(c => c.Picture2);
+                .Ignore(c => c.Picture2)
+                .Ignore(c => c.ProductPictureHolder)
+                .Ignore(c => c.ProductPictureHolder2);
         }
     }
 }

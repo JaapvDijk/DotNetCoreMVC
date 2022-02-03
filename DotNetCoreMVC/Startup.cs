@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Nest;
 //test
 namespace DotNetCoreMVC
 {
@@ -36,6 +37,9 @@ namespace DotNetCoreMVC
             services.AddTransient<NumberCounterTransient>();
 
             services.AddTransient<NumberCounterDependent>();
+
+            var settings = new ConnectionSettings();
+            services.AddSingleton<IElasticClient>(new ElasticClient(settings));
 
             services.AddControllersWithViews();
 

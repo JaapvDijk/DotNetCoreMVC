@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using DataAccess;
 using System.Linq;
+using Nest;
 
 namespace DotNetCoreMVC.Controllers
 {
@@ -32,12 +33,15 @@ namespace DotNetCoreMVC.Controllers
 
         private readonly DatabaseContext _context;
 
+        private IElasticClient _elasticClient { get; }
+
         public HomeController(NumberCounterTransient numberCounterTransient,
                               NumberCounterScoped numberCounterScoped,
                               NumberCounterSingleton numberCounterSingleton,
                               NumberCounterDependent numberCounterDependent,
                               IOptionsSnapshot<NumberCounterConfig> numberCounterConfig,
-                              DatabaseContext databaseContext)
+                              DatabaseContext databaseContext,
+                              IElasticClient elasticClient)
         {
             _numberCounterTransient = numberCounterTransient;
             _numberCounterScoped = numberCounterScoped;
@@ -47,6 +51,27 @@ namespace DotNetCoreMVC.Controllers
             _numberCounterConfig = numberCounterConfig.Value;
 
             _context = databaseContext;
+            _elasticClient = elasticClient;
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Authorized()
+        {
+            var token = await HttpContext.GetTokenAsync("access_token");
+
+            using (var client = new HttpClient())
+            {
+                client.SetBearerToken(token);
+                var call_result = await client.GetAsync("https://localhost:5002/api/WeatherForecast");
+
+                if (call_result.IsSuccessStatusCode)
+                {
+                    var message = await call_result.Content.ReadAsStringAsync();
+                    return View(message);
+                }
+            }
+
+            return View("U authorized m8!");
         }
 
         public IActionResult Counter(bool useTwoDependencies = false)
@@ -70,29 +95,11 @@ namespace DotNetCoreMVC.Controllers
             return View(counterTotal);
         }
 
-        [Authorize]
         public async Task<IActionResult> Index(string? searchString)
         {
-            var token = await HttpContext.GetTokenAsync("access_token");
             TestViewModel viewmodel = new();
             viewmodel.ProductTotal = _context.Stats.Select(x => x.NumberOfProducts).FirstOrDefault();
             viewmodel.LaptopList = _laptops;
-
-            using (var client = new HttpClient())
-            {
-                client.SetBearerToken(token);
-                var call_result = await client.GetAsync("https://localhost:5002/api/WeatherForecast");
-
-                if (call_result.IsSuccessStatusCode)
-                {
-                    var message = await call_result.Content.ReadAsStringAsync();
-                    viewmodel.AuthorizedMessageFromApi = message;
-                }
-                else 
-                {
-                    viewmodel.AuthorizedMessageFromApi = "mag niet";
-                }
-            }
 
             //TODO: search bind remains null in TestViewModel.search with [BindProperty] and asp-for
             if (searchString != null)
@@ -101,6 +108,24 @@ namespace DotNetCoreMVC.Controllers
             }
 
             return View(viewmodel);
+        }
+        public async Task<IActionResult> Elastic(string id)
+        {
+            //var response = await _elasticClient.SearchAsync<User>(
+            //    s => s.Query( q => q.Term(t => t.Name, id) ||
+            //         q.Match(m => m.Field(
+            //            f => f.Name).Query(id)))
+            //    );
+
+            //var response = _elasticClient.Search<User>(s => s
+            //.Index("users")
+            //.Query(q => q
+            //    .Term(o => o.Name, "test")));
+
+            var response = await _elasticClient.GetAsync<User>(new DocumentPath<User>(
+                new Id(id)), x => x.Index("users"));
+
+            return View(response.Source);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
