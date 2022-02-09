@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnApi", "AnApi\AnApi.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{9759BFAA-EB36-4557-BB40-EF219BBED4CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLearningTests", "DotNetLearningTests\DotNetLearningTests.csproj", "{421EA832-CB20-4B93-9219-1FC21ACE8986}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetLearningTests", "DotNetLearningTests\DotNetLearningTests.csproj", "{421EA832-CB20-4B93-9219-1FC21ACE8986}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorServerApp", "BlazorServerApp\BlazorServerApp.csproj", "{5331B5CE-0A3D-4E25-B8AD-6483BF31322A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{421EA832-CB20-4B93-9219-1FC21ACE8986}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{421EA832-CB20-4B93-9219-1FC21ACE8986}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{421EA832-CB20-4B93-9219-1FC21ACE8986}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5331B5CE-0A3D-4E25-B8AD-6483BF31322A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5331B5CE-0A3D-4E25-B8AD-6483BF31322A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5331B5CE-0A3D-4E25-B8AD-6483BF31322A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5331B5CE-0A3D-4E25-B8AD-6483BF31322A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
